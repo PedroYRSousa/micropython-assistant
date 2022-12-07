@@ -7,6 +7,7 @@ MONITOR_DEVICE_VALUE = 0b0100
 HELP_TEXT = '-h'
 HELP_VALUE = 0b1000
 
+
 class Arg():
     def __init__(self, argv: list[str]) -> None:
         self.arg = 0b0000
@@ -18,7 +19,7 @@ class Arg():
             if (arg == HELP_TEXT):
                 self.arg = HELP_VALUE
                 return
-            
+
             if (arg == CLEAR_DEVICE_TEXT):
                 self.arg += CLEAR_DEVICE_VALUE
             if (arg == UPLOAD_FILES_TEXT):

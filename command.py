@@ -3,14 +3,15 @@ import subprocess
 from path import Path, FILE, DIR
 from config import Ignore, Options, Tools
 
+
 class Command():
     def __init__(self) -> None:
         self.paths: list[Path] = []
         self.commands: list[str] = []
 
-    def _get_paths(self, ignore: Ignore, path = None):
+    def _get_paths(self, ignore: Ignore, path=None):
         files = os.listdir(path)
-        
+
         if len(files) == 0:
             self.paths.remove(self.paths[len(self.paths) - 1])
 
@@ -40,7 +41,7 @@ class Command():
     def _get_commands(self, options: Options, tools: Tools):
         file_prefix = f"{tools.ampy} --port {options.port} --baud {options.baud} put "
         dir_prefix = f"{tools.ampy} --port {options.port} --baud {options.baud} mkdir "
-        
+
         for path in self.paths:
             if (path.type is FILE):
                 self.commands.append(file_prefix + path.path)
@@ -58,11 +59,15 @@ class Command():
 
         return output
 
+    def execute_reset_device(options: Options, tools: Tools):
+        print("===== Execute reset device =====")
+        command = f"{tools.ampy} --port {options.port} --baud {options.baud} reset --safe"
+        Command.execute(command)
+
     def execute_serial_command(options: Options, tools: Tools):
         print("===== Execute serial command =====")
         command = f"{tools.rshell} --port {options.port} --baud {options.baud} repl"
         subprocess.run(command.split())
-        
 
     def create_command(ignore: Ignore, options: Options, tools: Tools):
         print("===== Create command =====")
@@ -70,5 +75,5 @@ class Command():
         command = Command()
         command._get_paths(ignore)
         command._get_commands(options, tools)
-        
+
         return command

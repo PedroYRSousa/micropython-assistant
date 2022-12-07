@@ -4,6 +4,7 @@ from command import Command
 from device import Device
 from arg import Arg, HELP_VALUE, CLEAR_DEVICE_VALUE, UPLOAD_FILES_VALUE, MONITOR_DEVICE_VALUE
 
+
 def help():
     pass
 
@@ -13,18 +14,23 @@ def all(config: Config):
     upload_files(config)
     monitor_device(config)
 
+
 def clear_device(config: Config):
     Device.clear_device(config.options_upload, config.tools)
 
+
 def upload_files(config: Config):
-    commands = Command.create_command(config.ignore, config.options_upload, config.tools)
+    commands = Command.create_command(
+        config.ignore, config.options_upload, config.tools)
 
     print("===== Execute commands =====")
     for command in commands.commands:
         Command.execute(command)
 
+
 def monitor_device(config: Config):
     Command.execute_serial_command(config.options_serial, config.tools)
+
 
 try:
     arg = Arg(sys.argv[1:])
@@ -44,9 +50,11 @@ Não combine flags se o fizer separe por argumento''')
     else:
         config = Config.get_config_info()
 
+        Command.execute_reset_device(config.options_serial, config.tools)
+
         if arg.arg == 0:
             all(config)
-        
+
         if arg.arg & CLEAR_DEVICE_VALUE:
             clear_device(config)
 
